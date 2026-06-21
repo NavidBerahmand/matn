@@ -94,27 +94,18 @@ a { color: inherit; text-decoration: none; }
 }
 .theme-toggle:hover { color: var(--fg); border-color: var(--muted); }
 
-/* ===== Header ===== */
-.head {
-  padding: 70px 40px 50px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-.head h1 { font-weight: 700; font-size: 30px; margin: 0 0 10px; letter-spacing: 0.01em; }
-.head p { color: var(--muted); font-size: 14px; margin: 0; max-width: 520px; }
-
 /* ===== Grid ===== */
 .grid {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 10px 40px 100px;
+  padding: 60px 40px 100px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 46px 34px;
 }
 @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 700px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 32px 22px; padding: 10px 24px 80px; } }
-@media (max-width: 700px)  { .nav, .head { padding-left: 24px; padding-right: 24px; } }
+@media (max-width: 700px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 32px 22px; padding: 40px 24px 80px; } }
+@media (max-width: 700px)  { .nav { padding-left: 24px; padding-right: 24px; } }
 
 /* card */
 .card { cursor: pointer; transition: opacity 0.35s ease; }
