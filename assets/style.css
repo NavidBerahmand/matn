@@ -80,19 +80,44 @@ a { color: inherit; text-decoration: none; }
 .nav__brand { font-weight: 700; font-size: 13px; letter-spacing: 0.02em; }
 .nav__links { display: flex; gap: 26px; align-items: center; color: var(--muted); }
 .nav__links a:hover { color: var(--fg); }
-.theme-toggle {
+.nav__btn {
   background: none;
-  border: 1px solid var(--line);
+  border: none;
   color: var(--muted);
   font-family: inherit;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.04em;
-  padding: 5px 12px;
-  border-radius: 999px;
+  padding: 0;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  transition: color 0.2s;
 }
-.theme-toggle:hover { color: var(--fg); border-color: var(--muted); }
+.nav__btn:hover, .nav__btn[aria-expanded="true"] { color: var(--fg); }
+
+/* ===== Search panel ===== */
+.search-panel {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 22px 40px 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+.search-panel[hidden] { display: none; }
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 17px;
+  padding: 8px 2px;
+  outline: none;
+}
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { border-bottom-color: var(--muted); }
+.search-meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
+@media (max-width: 700px) { .search-panel { padding-left: 24px; padding-right: 24px; } }
 
 /* ===== Grid ===== */
 .grid {
@@ -133,16 +158,17 @@ a { color: inherit; text-decoration: none; }
   font-size: 15px;
   color: var(--muted);
 }
-.card__meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 10px;
-  margin-top: 12px;
-}
+.card__meta { margin-top: 12px; }
 .card__title { font-weight: 700; font-size: 14px; }
-.card__author { color: var(--muted); font-size: 12px; }
-.card__num { color: var(--muted); font-size: 11px; }
+.card__author {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.card__author:hover { color: var(--fg); }
 
 /* ===== Modal ===== */
 .modal-backdrop {
@@ -203,6 +229,14 @@ a { color: inherit; text-decoration: none; }
 }
 .modal__row .k { color: var(--muted); }
 .modal__row .v { font-weight: 700; }
+.modal__row .v.author { font-weight: 400; }
+.alink {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.alink:hover { color: var(--muted); }
 
 .modal__tags { display: flex; flex-wrap: wrap; gap: 7px; margin: 16px 0 4px; }
 .modal__tags span {

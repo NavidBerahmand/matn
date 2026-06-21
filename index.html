@@ -12,9 +12,15 @@
     <div class="nav__brand">مَتن</div>
     <div class="nav__links">
       <a href="#books">کتاب‌ها</a>
-      <button id="theme-toggle" class="theme-toggle" type="button">تاریک</button>
+      <button id="search-toggle" class="nav__btn" type="button" aria-expanded="false">جستجو</button>
     </div>
   </nav>
+
+  <div id="search-panel" class="search-panel" hidden>
+    <input id="search-input" class="search-input" type="search"
+           placeholder="جستجوی عنوان یا نویسنده…" autocomplete="off" />
+    <span id="search-meta" class="search-meta"></span>
+  </div>
 
   <main id="books">
     <section id="grid" class="grid"><!-- cards injected by app.js --></section>
