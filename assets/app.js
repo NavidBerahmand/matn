@@ -42,11 +42,16 @@ function triggerAnchor(href, name) {
 
 /* ===== State ===== */
 let BOOKS = [];
+const PAGE = 60; // cards rendered per batch — keeps the DOM small with many books
+let view = []; // current (possibly filtered) list
+let shown = 0; // how many of `view` are in the DOM
+let sentinelObserver = null;
 const grid = () => document.getElementById("grid");
 
 async function init() {
   setupSearch();
   setupModal();
+  setupGridDelegation();
 
   try {
     const res = await fetch("books.json", { cache: "no-cache" });
@@ -62,32 +67,52 @@ async function init() {
     return;
   }
 
-  // Keep each book's original index so cards in a filtered view still map back.
-  BOOKS.forEach((b, i) => (b._idx = i));
-  renderGrid(BOOKS);
+  // Precompute, once: stable index (so filtered cards still map back) and a
+  // lowercased search haystack (so filtering never rebuilds strings per keypress).
+  BOOKS.forEach((b, i) => {
+    b._idx = i;
+    b._hay = [b.title, b.author, b.category, (b.tags || []).join(" ")]
+      .join(" ")
+      .toLowerCase();
+  });
+
+  setupSentinel();
+  showList(BOOKS);
 }
 
-/* ===== Grid ===== */
-function renderGrid(list) {
-  const g = grid();
-  g.innerHTML = list.map((b) => cardHTML(b)).join("");
-  g.querySelectorAll(".card").forEach((el) => {
-    el.addEventListener("click", (e) => {
-      // Author click filters instead of opening the modal.
-      if (e.target.closest(".card__author")) {
-        e.stopPropagation();
-        filterByAuthor(e.target.closest(".card__author").dataset.author);
-        return;
-      }
-      openModal(Number(el.dataset.index));
-    });
-  });
+/* ===== Incremental rendering ===== */
+// Render `list` from scratch, then stream in more batches as the user scrolls.
+function showList(list) {
+  view = list;
+  shown = 0;
+  grid().innerHTML = "";
+  appendBatch();
+}
+
+function appendBatch() {
+  if (shown >= view.length) return;
+  const next = view.slice(shown, shown + PAGE);
+  grid().insertAdjacentHTML("beforeend", next.map(cardHTML).join(""));
+  shown += next.length;
+}
+
+function setupSentinel() {
+  if (sentinelObserver) return;
+  const sentinel = document.getElementById("grid-sentinel");
+  sentinelObserver = new IntersectionObserver(
+    (entries) => {
+      // Keep appending while the sentinel stays in view (e.g. tall screens).
+      if (entries.some((e) => e.isIntersecting)) appendBatch();
+    },
+    { rootMargin: "600px 0px" } // start loading a bit before it's reached
+  );
+  sentinelObserver.observe(sentinel);
 }
 
 function cardHTML(b) {
   const cover = bookFile(b, b.cover);
   const coverInner = cover
-    ? `<img src="${cover}" alt="${escapeHtml(b.title)}" loading="lazy"
+    ? `<img src="${cover}" alt="${escapeHtml(b.title)}" loading="lazy" decoding="async"
            onerror="this.parentElement.classList.add('is-empty');this.remove();">`
     : "";
   const emptyClass = cover ? "" : "is-empty";
@@ -102,6 +127,21 @@ function cardHTML(b) {
         ${author}
       </div>
     </article>`;
+}
+
+// One delegated listener for the whole grid — no per-card handlers, so it stays
+// cheap no matter how many cards are rendered.
+function setupGridDelegation() {
+  grid().addEventListener("click", (e) => {
+    const authorEl = e.target.closest(".card__author");
+    if (authorEl) {
+      e.stopPropagation();
+      filterByAuthor(authorEl.dataset.author);
+      return;
+    }
+    const card = e.target.closest(".card");
+    if (card) openModal(Number(card.dataset.index));
+  });
 }
 
 /* ===== Search / filter ===== */
@@ -122,7 +162,12 @@ function setupSearch() {
     }
   });
 
-  input.addEventListener("input", () => applySearch(input.value));
+  // Debounce so a fast typist filters once they pause, not on every keystroke.
+  let t;
+  input.addEventListener("input", () => {
+    clearTimeout(t);
+    t = setTimeout(() => applySearch(input.value), 120);
+  });
   input.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       input.value = "";
@@ -137,20 +182,13 @@ function applySearch(raw) {
   const q = (raw || "").trim().toLowerCase();
   const meta = document.getElementById("search-meta");
   if (!q) {
-    renderGrid(BOOKS);
+    showList(BOOKS);
     meta.textContent = "";
     return;
   }
-  const list = BOOKS.filter((b) => {
-    const hay = [b.title, b.author, b.category, (b.tags || []).join(" ")]
-      .join(" ")
-      .toLowerCase();
-    return hay.includes(q);
-  });
-  renderGrid(list);
-  meta.textContent = list.length
-    ? `${faNum(list.length)} نتیجه`
-    : "نتیجه‌ای یافت نشد";
+  const list = BOOKS.filter((b) => b._hay.includes(q));
+  showList(list);
+  meta.textContent = list.length ? `${faNum(list.length)} نتیجه` : "نتیجه‌ای یافت نشد";
 }
 
 function filterByAuthor(author) {
