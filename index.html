@@ -9,12 +9,17 @@
 </head>
 <body>
   <nav class="nav">
-    <div class="nav__brand">مَتن</div>
+    <button type="button" class="nav__brand" id="home" aria-label="خانه">مَتن</button>
     <div class="nav__links">
       <a href="#books">کتاب‌ها</a>
       <button id="search-toggle" class="nav__btn" type="button" aria-expanded="false">جستجو</button>
     </div>
   </nav>
+
+  <div id="filter-bar" class="filter-bar" hidden>
+    <span class="filter-bar__label">نمایش:</span>
+    <button id="filter-chip" class="filter-chip" type="button"></button>
+  </div>
 
   <div id="search-panel" class="search-panel" hidden>
     <input id="search-input" class="search-input" type="search"

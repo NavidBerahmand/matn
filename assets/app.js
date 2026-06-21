@@ -136,7 +136,7 @@ function setupGridDelegation() {
     const authorEl = e.target.closest(".card__author");
     if (authorEl) {
       e.stopPropagation();
-      filterByAuthor(authorEl.dataset.author);
+      filterByFacet("author", authorEl.dataset.author);
       return;
     }
     const card = e.target.closest(".card");
@@ -181,6 +181,9 @@ function setupSearch() {
 function applySearch(raw) {
   const q = (raw || "").trim().toLowerCase();
   const meta = document.getElementById("search-meta");
+  // Search and tag-filtering are independent: typing a query drops any active
+  // tag filter so the two never mix.
+  clearFacetState();
   if (!q) {
     showList(BOOKS);
     meta.textContent = "";
@@ -191,16 +194,59 @@ function applySearch(raw) {
   meta.textContent = list.length ? `${faNum(list.length)} نتیجه` : "نتیجه‌ای یافت نشد";
 }
 
-function filterByAuthor(author) {
-  if (!author) return;
-  const panel = document.getElementById("search-panel");
-  const input = document.getElementById("search-input");
-  const toggle = document.getElementById("search-toggle");
+/* ===== Tag filter (author / category / tag) — separate from search ===== */
+let activeFacet = null;
+
+function matchFacet(b, type, value) {
+  if (type === "author") return b.author === value;
+  if (type === "category") return b.category === value;
+  if (type === "tag") return (b.tags || []).includes(value);
+  return false;
+}
+
+function filterByFacet(type, value) {
+  if (!type || !value) return;
+  activeFacet = { type, value };
   closeModal();
-  panel.removeAttribute("hidden");
-  toggle.setAttribute("aria-expanded", "true");
-  input.value = author;
-  applySearch(author);
+  // Tag filtering is independent from search: clear and close the search field.
+  const input = document.getElementById("search-input");
+  const panel = document.getElementById("search-panel");
+  const toggle = document.getElementById("search-toggle");
+  input.value = "";
+  document.getElementById("search-meta").textContent = "";
+  panel.setAttribute("hidden", "");
+  toggle.setAttribute("aria-expanded", "false");
+
+  showList(BOOKS.filter((b) => matchFacet(b, type, value)));
+
+  const bar = document.getElementById("filter-bar");
+  document.getElementById("filter-chip").textContent = value + "  ✕";
+  bar.removeAttribute("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Hide the filter bar and forget the active facet (does not re-render).
+function clearFacetState() {
+  activeFacet = null;
+  document.getElementById("filter-bar").setAttribute("hidden", "");
+}
+
+function clearFacet() {
+  clearFacetState();
+  showList(BOOKS);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Brand acts as Home: drop every filter and show the full catalog.
+function goHome() {
+  clearFacetState();
+  const input = document.getElementById("search-input");
+  input.value = "";
+  document.getElementById("search-meta").textContent = "";
+  document.getElementById("search-panel").setAttribute("hidden", "");
+  document.getElementById("search-toggle").setAttribute("aria-expanded", "false");
+  closeModal();
+  showList(BOOKS);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -214,6 +260,16 @@ function setupModal() {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeModal();
   });
+
+  // Home button + clear-filter chip.
+  document.getElementById("home").addEventListener("click", goHome);
+  document.getElementById("filter-chip").addEventListener("click", clearFacet);
+
+  // Delegated clicks on the modal's tag chips → filter by that facet.
+  document.getElementById("m-tags").addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if (chip) filterByFacet(chip.dataset.type, chip.dataset.value);
+  });
 }
 
 function openModal(i) {
@@ -226,38 +282,35 @@ function openModal(i) {
   document.getElementById("m-title").textContent = b.title || "";
   document.getElementById("m-desc").textContent = b.description || "";
 
-  const rows = [];
-  if (b.author) {
-    rows.push(
-      `<div class="modal__row"><span class="k">نویسنده</span>` +
-        `<span class="v author"><a class="alink" data-author="${escapeHtml(b.author)}">${escapeHtml(
-          b.author
-        )}</a></span></div>`
-    );
-  }
-  [
+  // Plain info rows (year/language/pages). Author and category live in the
+  // clickable chips below, so they're not repeated here.
+  const rows = [
     ["سال", b.year, true],
-    ["دسته‌بندی", b.category],
     ["زبان", b.language],
     ["صفحات", b.pages, true],
   ]
     .filter(([, v]) => v)
-    .forEach(([k, v, ltr]) => {
-      rows.push(
+    .map(
+      ([k, v, ltr]) =>
         `<div class="modal__row"><span class="k">${k}</span><span class="v">${
           ltr ? `<span class="ltr">${escapeHtml(String(v))}</span>` : escapeHtml(String(v))
         }</span></div>`
-      );
-    });
-  const rowsEl = document.getElementById("m-rows");
-  rowsEl.innerHTML = rows.join("");
-  const authorLink = rowsEl.querySelector(".alink");
-  if (authorLink) {
-    authorLink.addEventListener("click", () => filterByAuthor(authorLink.dataset.author));
-  }
+    )
+    .join("");
+  document.getElementById("m-rows").innerHTML = rows;
 
-  document.getElementById("m-tags").innerHTML = (b.tags || [])
-    .map((t) => `<span>${escapeHtml(t)}</span>`)
+  // Clickable tags: author, then type-of-writing (category), then tags.
+  const chips = [];
+  if (b.author) chips.push({ type: "author", value: b.author, cls: "is-author" });
+  if (b.category) chips.push({ type: "category", value: b.category, cls: "" });
+  (b.tags || []).forEach((t) => chips.push({ type: "tag", value: t, cls: "" }));
+  document.getElementById("m-tags").innerHTML = chips
+    .map(
+      (c) =>
+        `<button class="chip ${c.cls}" type="button" data-type="${c.type}" data-value="${escapeHtml(
+          c.value
+        )}">${escapeHtml(c.value)}</button>`
+    )
     .join("");
 
   const mc = document.getElementById("m-cover");
