@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مَتن — افزودن کتاب (محلی)</title>
+  <style>
+    @font-face {
+      font-family: "Abar";
+      src: url("fonts/AbarMid-Regular.woff") format("woff");
+      font-weight: 400; font-display: swap;
+    }
+    @font-face {
+      font-family: "Abar";
+      src: url("fonts/AbarMid-Bold.woff") format("woff");
+      font-weight: 700; font-display: swap;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Abar", system-ui, sans-serif;
+      background: #f5f3ee; color: #1a1815;
+      margin: 0; padding: 40px 20px; line-height: 1.8;
+    }
+    .wrap { max-width: 640px; margin: 0 auto; }
+    h1 { font-weight: 700; font-size: 22px; margin: 0 0 4px; }
+    .sub { color: #8a857c; font-size: 13px; margin: 0 0 28px; }
+    label { display: block; font-size: 13px; margin: 16px 0 6px; }
+    label .hint { color: #8a857c; font-size: 11px; }
+    input, textarea {
+      width: 100%; font-family: inherit; font-size: 14px;
+      padding: 10px 12px; border: 1px solid #d9d5cc; background: #fff;
+      color: #1a1815; border-radius: 4px;
+    }
+    input:focus, textarea:focus { outline: none; border-color: #1a1815; }
+    textarea { resize: vertical; min-height: 90px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .actions { display: flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; }
+    button {
+      font-family: inherit; font-size: 13px; padding: 11px 20px;
+      border: 1px solid #1a1815; cursor: pointer; border-radius: 4px;
+      transition: opacity .2s;
+    }
+    button:hover { opacity: .82; }
+    .primary { background: #1a1815; color: #f5f3ee; }
+    .ghost { background: transparent; color: #1a1815; }
+    pre {
+      margin-top: 22px; background: #1a1815; color: #e9e6df;
+      padding: 18px; border-radius: 6px; overflow: auto;
+      font-size: 12.5px; line-height: 1.7; direction: ltr; text-align: left;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .copied { color: #2e7d32; font-size: 12px; margin-inline-start: 8px; }
+    .ltr { direction: ltr; }
+    .note {
+      margin-top: 20px; font-size: 12.5px; color: #8a857c;
+      border-top: 1px solid #d9d5cc; padding-top: 16px;
+    }
+    code { background: #eceae3; padding: 1px 5px; border-radius: 3px; direction: ltr; display: inline-block; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>افزودن کتاب</h1>
+    <p class="sub">این صفحه فقط محلی روی کامپیوتر شما اجرا می‌شود. فیلدها را پر کنید، روی «کپی JSON» بزنید، و خروجی را داخل آرایه‌ٔ <code>books.json</code> پیست کنید.</p>
+
+    <form id="f" autocomplete="off">
+      <label>اسلاگ (slug) <span class="hint">— لاتین، بدون فاصله. نام پوشه و فایل‌ها از همین ساخته می‌شود. مثل <span class="ltr">jennameh</span></span></label>
+      <input name="slug" placeholder="jennameh" />
+
+      <label>عنوان فارسی</label>
+      <input name="title" placeholder="جِن‌نامه" />
+
+      <div class="row">
+        <div>
+          <label>نویسنده</label>
+          <input name="author" placeholder="هوشنگ گلشیری" />
+        </div>
+        <div>
+          <label>سال</label>
+          <input name="year" placeholder="۱۳۷۷" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>دسته‌بندی</label>
+          <input name="category" placeholder="رمان" />
+        </div>
+        <div>
+          <label>زبان</label>
+          <input name="language" placeholder="فارسی" value="فارسی" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>صفحات</label>
+          <input name="pages" placeholder="۵۱۲" />
+        </div>
+        <div>
+          <label>برچسب‌ها <span class="hint">— با ویرگول جدا کنید</span></label>
+          <input name="tags" placeholder="ادبیات معاصر, داستان بلند" />
+        </div>
+      </div>
+
+      <label>توضیح کوتاه</label>
+      <textarea name="description" placeholder="توضیح کوتاهی درباره‌ٔ کتاب…"></textarea>
+
+      <label>نام فایل نسخه‌ٔ روشن <span class="hint">— مثل <span class="ltr">JenNameh-Light.pdf</span> (یا URL کامل)</span></label>
+      <input name="file_light" placeholder="JenNameh-Light.pdf" />
+
+      <label>نام فایل نسخه‌ٔ تاریک <span class="hint">— مثل <span class="ltr">JenNameh-Dark.pdf</span> (یا URL کامل)</span></label>
+      <input name="file_dark" placeholder="JenNameh-Dark.pdf" />
+
+      <label>نام فایل کاور <span class="hint">— مثل <span class="ltr">JenNameh-Cover.jpg</span></span></label>
+      <input name="cover" placeholder="JenNameh-Cover.jpg" />
+
+      <div class="actions">
+        <button type="button" class="primary" id="copy">کپی JSON</button>
+        <span id="copied" class="copied" style="display:none">کپی شد ✓</span>
+      </div>
+    </form>
+
+    <pre id="out"></pre>
+
+    <div class="note">
+      پس از کپی: فایل‌های PDF و کاور را در پوشه‌ٔ <code>books/&lt;slug&gt;/</code> بگذارید
+      (مثلاً <code>books/jennameh/JenNameh-Light.pdf</code>)، سپس آبجکت کپی‌شده را به آرایه‌ٔ
+      <code>books.json</code> اضافه کنید. اگر اولین کتاب نیست، یادتان باشد بین آبجکت‌ها ویرگول بگذارید.
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("f");
+
+    function buildObject() {
+      const d = Object.fromEntries(new FormData(form).entries());
+      const tags = (d.tags || "")
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      return {
+        slug: (d.slug || "").trim(),
+        title: (d.title || "").trim(),
+        author: (d.author || "").trim(),
+        year: (d.year || "").trim(),
+        language: (d.language || "").trim(),
+        category: (d.category || "").trim(),
+        tags: tags,
+        pages: (d.pages || "").trim(),
+        description: (d.description || "").trim(),
+        file_light: (d.file_light || "").trim(),
+        file_dark: (d.file_dark || "").trim(),
+        cover: (d.cover || "").trim(),
+      };
+    }
+
+    function render() {
+      document.getElementById("out").textContent = JSON.stringify(buildObject(), null, 2);
+    }
+
+    form.addEventListener("input", render);
+    render();
+
+    document.getElementById("copy").addEventListener("click", async () => {
+      const text = JSON.stringify(buildObject(), null, 2);
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        // fallback for file:// where clipboard API may be blocked
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+      const c = document.getElementById("copied");
+      c.style.display = "inline";
+      setTimeout(() => (c.style.display = "none"), 1800);
+    });
+  </script>
+</body>
+</html>

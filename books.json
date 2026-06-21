@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "jennameh",
+    "title": "جِن‌نامه",
+    "author": "هوشنگ گلشیری",
+    "year": "۱۳۷۷",
+    "language": "فارسی",
+    "category": "رمان",
+    "tags": ["ادبیات معاصر", "داستان بلند"],
+    "pages": "۵۱۲",
+    "description": "رمانی چندلایه از هوشنگ گلشیری که در آن زبان، خاطره و تاریخ در هم تنیده می‌شوند. روایتی از یک خاندان و باورهای کهن که میان واقعیت و وهم در نوسان است.",
+    "file_light": "JenNameh-Light.pdf",
+    "file_dark": "JenNameh-Dark.pdf",
+    "cover": "JenNameh-Cover.jpg"
+  },
+  {
+    "slug": "boofekur",
+    "title": "بوف کور",
+    "author": "صادق هدایت",
+    "year": "۱۳۱۵",
+    "language": "فارسی",
+    "category": "رمان",
+    "tags": ["ادبیات معاصر", "روان‌شناختی"],
+    "pages": "۱۲۸",
+    "description": "شناخته‌شده‌ترین اثر صادق هدایت؛ روایتی تب‌آلود و درون‌گرا که مرز میان رؤیا و کابوس را محو می‌کند و یکی از تأثیرگذارترین متن‌های ادبیات نوین فارسی است.",
+    "file_light": "BoofeKur-Light.pdf",
+    "file_dark": "BoofeKur-Dark.pdf",
+    "cover": "BoofeKur-Cover.jpg"
+  },
+  {
+    "slug": "savushun",
+    "title": "سووشون",
+    "author": "سیمین دانشور",
+    "year": "۱۳۴۸",
+    "language": "فارسی",
+    "category": "رمان",
+    "tags": ["ادبیات معاصر", "تاریخی"],
+    "pages": "۳۰۴",
+    "description": "نخستین رمان منتشرشده به قلم یک زن ایرانی؛ تصویری از شیراز در سال‌های جنگ جهانی دوم و کشمکش سنت و تجدد در دل یک خانواده.",
+    "file_light": "Savushun-Light.pdf",
+    "file_dark": "Savushun-Dark.pdf",
+    "cover": "Savushun-Cover.jpg"
+  }
+]
