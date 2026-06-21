@@ -195,7 +195,10 @@ function applySearch(raw) {
 }
 
 /* ===== Tag filter (author / category / tag) — separate from search ===== */
+// Three distinct, typed facet dimensions. They never mix: an author "رمان" and
+// a category "رمان" are different facets because each filter carries its type.
 let activeFacet = null;
+const FACET_LABELS = { author: "نویسنده", category: "نوع", tag: "موضوع" };
 
 function matchFacet(b, type, value) {
   if (type === "author") return b.author === value;
@@ -220,7 +223,9 @@ function filterByFacet(type, value) {
   showList(BOOKS.filter((b) => matchFacet(b, type, value)));
 
   const bar = document.getElementById("filter-bar");
-  document.getElementById("filter-chip").textContent = value + "  ✕";
+  document.getElementById("filter-chip").innerHTML =
+    `<span class="filter-chip__type">${FACET_LABELS[type] || ""}</span>` +
+    `${escapeHtml(value)}<span class="filter-chip__x">✕</span>`;
   bar.removeAttribute("hidden");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -299,15 +304,16 @@ function openModal(i) {
     .join("");
   document.getElementById("m-rows").innerHTML = rows;
 
-  // Clickable tags: author, then type-of-writing (category), then tags.
+  // Clickable tags, kept in three distinct groups: author, then type-of-writing
+  // (category), then subject tags. Each carries its facet type.
   const chips = [];
-  if (b.author) chips.push({ type: "author", value: b.author, cls: "is-author" });
-  if (b.category) chips.push({ type: "category", value: b.category, cls: "" });
-  (b.tags || []).forEach((t) => chips.push({ type: "tag", value: t, cls: "" }));
+  if (b.author) chips.push({ type: "author", value: b.author });
+  if (b.category) chips.push({ type: "category", value: b.category });
+  (b.tags || []).forEach((t) => chips.push({ type: "tag", value: t }));
   document.getElementById("m-tags").innerHTML = chips
     .map(
       (c) =>
-        `<button class="chip ${c.cls}" type="button" data-type="${c.type}" data-value="${escapeHtml(
+        `<button class="chip chip--${c.type}" type="button" data-type="${c.type}" data-value="${escapeHtml(
           c.value
         )}">${escapeHtml(c.value)}</button>`
     )

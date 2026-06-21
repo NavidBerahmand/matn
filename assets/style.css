@@ -140,6 +140,9 @@ a { color: inherit; text-decoration: none; }
 .filter-bar[hidden] { display: none; }
 .filter-bar__label { color: var(--muted); font-size: 12px; }
 .filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: inherit;
   font-size: 13px;
   color: var(--fg);
@@ -151,6 +154,8 @@ a { color: inherit; text-decoration: none; }
   transition: opacity 0.2s;
 }
 .filter-chip:hover { opacity: 0.8; }
+.filter-chip__type { color: var(--muted); font-size: 11px; }
+.filter-chip__x { color: var(--muted); font-size: 11px; }
 @media (max-width: 700px) { .filter-bar { padding-left: 24px; padding-right: 24px; } }
 
 /* ===== Grid ===== */
@@ -276,8 +281,10 @@ a { color: inherit; text-decoration: none; }
   transition: color 0.2s, border-color 0.2s;
 }
 .modal__tags .chip:hover { color: var(--fg); border-color: var(--muted); }
-/* the author chip gets a touch more emphasis */
-.modal__tags .chip.is-author { color: var(--fg); }
+/* Three distinct facet kinds, so the systems read as separate, not mixed: */
+.modal__tags .chip--author { color: var(--fg); background: var(--bg-2); border-color: var(--bg-2); } /* نویسنده — filled */
+.modal__tags .chip--category { color: var(--fg); }                                                   /* نوع — solid outline */
+.modal__tags .chip--tag { color: var(--muted); border-style: dashed; }                               /* موضوع — dashed outline */
 
 .modal__cover {
   margin: 18px 0;
