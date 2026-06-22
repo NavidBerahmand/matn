@@ -177,10 +177,9 @@ a { color: inherit; text-decoration: none; }
 
 /* card */
 .card { cursor: pointer; transition: opacity 0.35s ease; }
-/* hover fade: dim siblings only while an actual card is hovered — not when the
-   cursor is merely over the empty space between cards. */
-.grid:has(.card:hover) .card { opacity: var(--fade); }
-.grid .card:hover { opacity: 1; }
+/* hover fade: while a card is hovered, dim only the OTHER cards (the hovered
+   one keeps full opacity). Scoped to a real card hover, not the gaps. */
+.grid:has(.card:hover) .card:not(:hover) { opacity: var(--fade); }
 
 .card__cover {
   position: relative;
