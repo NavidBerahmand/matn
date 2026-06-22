@@ -77,8 +77,6 @@ a { color: inherit; text-decoration: none; }
   /* Same horizontal box as .grid (max-width + padding + centered) so the brand
      lines up with the right edge of book 1 and the search button with the left
      edge of book 5. */
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 22px 40px;
   font-size: 12px;
   border-bottom: 1px solid transparent;
@@ -109,8 +107,6 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== Search panel ===== */
 .search-panel {
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 22px 40px 6px;
   display: flex;
   align-items: baseline;
@@ -135,8 +131,6 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== Active filter bar (tag filter — independent from search) ===== */
 .filter-bar {
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 22px 40px 0;
   display: flex;
   align-items: center;
@@ -165,8 +159,6 @@ a { color: inherit; text-decoration: none; }
 
 /* ===== Grid ===== */
 .grid {
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 60px 40px 100px;
   display: grid;
   /* Always exactly 5 spaced columns on desktop. The outer columns have no gap
@@ -317,4 +309,4 @@ a { color: inherit; text-decoration: none; }
 .dl button:hover { opacity: 0.82; }
 .dl button:disabled { opacity: 0.4; cursor: progress; }
 
-.empty-note { color: var(--muted); font-size: 13px; padding: 0 40px 80px; max-width: 1400px; margin: 0 auto; }
+.empty-note { color: var(--muted); font-size: 13px; padding: 0 40px 80px; }
