@@ -153,6 +153,8 @@ function setupGridDelegation() {
 }
 
 function setHovered(card) {
+  // Hover-fade is fully disabled while a modal is open.
+  if (document.body.classList.contains("modal-open")) return;
   const g = grid();
   const prev = g.querySelector(".card.is-hover");
   if (prev && prev !== card) prev.classList.remove("is-hover");
@@ -348,10 +350,11 @@ function openModal(i) {
   setupDlButton("dl-light", light, `${filenameBase}-light.pdf`);
   setupDlButton("dl-dark", dark, `${filenameBase}-dark.pdf`);
 
+  setHovered(null); // clear any hover-fade left from the click (before the guard)
+  document.body.classList.add("modal-open");
   const backdrop = document.getElementById("modal-backdrop");
   backdrop.classList.add("open");
   document.body.style.overflow = "hidden";
-  setHovered(null); // clear any hover-fade left from the click
   // Always show the modal from its top, regardless of the previous scroll.
   backdrop.scrollTop = 0;
 }
@@ -372,6 +375,7 @@ function setupDlButton(id, url, name) {
 
 function closeModal() {
   document.getElementById("modal-backdrop").classList.remove("open");
+  document.body.classList.remove("modal-open");
   document.body.style.overflow = "";
 }
 

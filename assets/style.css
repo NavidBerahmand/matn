@@ -195,9 +195,9 @@ a { color: inherit; text-decoration: none; }
 /* card */
 .card { cursor: pointer; transition: opacity 0.35s ease; }
 /* hover fade: a JS-toggled class dims the non-hovered cards. Deterministic
-   (no :has() re-evaluation flicker), and naturally inactive while a modal is
-   open because the cursor never reaches the cards behind it. */
-.grid.is-faded .card:not(.is-hover) { opacity: var(--fade); }
+   (no :has() re-evaluation flicker). Hard-disabled while a modal is open via
+   body.modal-open, so the cards behind the dialog can never change. */
+body:not(.modal-open) .grid.is-faded .card:not(.is-hover) { opacity: var(--fade); }
 
 .card__cover {
   position: relative;
@@ -238,6 +238,9 @@ a { color: inherit; text-decoration: none; }
   background: var(--overlay);
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
+  /* Give the blur its own stable compositing layer so paints inside the dialog
+     (e.g. button hovers) can't make the GPU re-rasterize it -> no flicker. */
+  will-change: backdrop-filter;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -258,6 +261,8 @@ a { color: inherit; text-decoration: none; }
   padding: 26px 26px 30px;
   transform: translateY(8px);
   transition: transform 0.3s ease;
+  /* Contain repaints to the dialog so they don't invalidate the backdrop blur. */
+  isolation: isolate;
 }
 .modal-backdrop.open .modal { transform: translateY(0); }
 
@@ -323,11 +328,13 @@ a { color: inherit; text-decoration: none; }
   padding: 13px 10px;
   cursor: pointer;
   border: 1px solid var(--btn-bg);
-  transition: opacity 0.2s, background 0.2s, color 0.2s;
+  transition: box-shadow 0.15s ease;
 }
 .dl .light { background: transparent; color: var(--fg); border-color: var(--line); }
 .dl .dark { background: var(--btn-bg); color: var(--btn-fg); }
-.dl button:hover { opacity: 0.82; }
-.dl button:disabled { opacity: 0.4; cursor: progress; }
+/* hover tint via an inset overlay (no opacity animation, which under a
+   backdrop-filter can make the blurred background flicker). */
+.dl button:hover { box-shadow: inset 0 0 0 100px rgba(128, 128, 128, 0.14); }
+.dl button:disabled { box-shadow: none; opacity: 0.5; cursor: progress; }
 
 .empty-note { color: var(--muted); font-size: 13px; padding: 0 40px 80px; }
