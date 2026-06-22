@@ -85,7 +85,9 @@ async function init() {
 function showList(list) {
   view = list;
   shown = 0;
-  grid().innerHTML = "";
+  const g = grid();
+  g.classList.remove("is-faded"); // reset any stale hover-fade on re-render
+  g.innerHTML = "";
   appendBatch();
 }
 
@@ -132,7 +134,8 @@ function cardHTML(b) {
 // One delegated listener for the whole grid — no per-card handlers, so it stays
 // cheap no matter how many cards are rendered.
 function setupGridDelegation() {
-  grid().addEventListener("click", (e) => {
+  const g = grid();
+  g.addEventListener("click", (e) => {
     const authorEl = e.target.closest(".card__author");
     if (authorEl) {
       e.stopPropagation();
@@ -142,6 +145,23 @@ function setupGridDelegation() {
     const card = e.target.closest(".card");
     if (card) openModal(Number(card.dataset.index));
   });
+
+  // Deterministic hover-fade: dim every card except the one under the cursor.
+  // Hovering the empty gaps (target is the grid itself) clears the fade.
+  g.addEventListener("mouseover", (e) => setHovered(e.target.closest(".card")));
+  g.addEventListener("mouseleave", () => setHovered(null));
+}
+
+function setHovered(card) {
+  const g = grid();
+  const prev = g.querySelector(".card.is-hover");
+  if (prev && prev !== card) prev.classList.remove("is-hover");
+  if (card) {
+    card.classList.add("is-hover");
+    g.classList.add("is-faded");
+  } else {
+    g.classList.remove("is-faded");
+  }
 }
 
 /* ===== Search / filter ===== */
@@ -330,8 +350,8 @@ function openModal(i) {
 
   const backdrop = document.getElementById("modal-backdrop");
   backdrop.classList.add("open");
-  document.body.classList.add("modal-open");
   document.body.style.overflow = "hidden";
+  setHovered(null); // clear any hover-fade left from the click
   // Always show the modal from its top, regardless of the previous scroll.
   backdrop.scrollTop = 0;
 }
@@ -352,7 +372,6 @@ function setupDlButton(id, url, name) {
 
 function closeModal() {
   document.getElementById("modal-backdrop").classList.remove("open");
-  document.body.classList.remove("modal-open");
   document.body.style.overflow = "";
 }
 
