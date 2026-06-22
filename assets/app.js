@@ -220,10 +220,11 @@ function applySearch(raw) {
 // Three distinct, typed facet dimensions. They never mix: an author "رمان" and
 // a category "رمان" are different facets because each filter carries its type.
 let activeFacet = null;
-const FACET_LABELS = { author: "نویسنده", category: "نوع", tag: "موضوع" };
+const FACET_LABELS = { author: "نویسنده", translator: "مترجم", category: "نوع", tag: "موضوع" };
 
 function matchFacet(b, type, value) {
   if (type === "author") return b.author === value;
+  if (type === "translator") return b.translator === value;
   if (type === "category") return b.category === value;
   if (type === "tag") return (b.tags || []).includes(value);
   return false;
@@ -326,10 +327,12 @@ function openModal(i) {
     .join("");
   document.getElementById("m-rows").innerHTML = rows;
 
-  // Clickable tags, kept in three distinct groups: author, then type-of-writing
-  // (category), then subject tags. Each carries its facet type.
+  // Clickable tags, kept in distinct groups: author, translator (only for
+  // translated books), then type-of-writing (category), then subject tags.
+  // Each carries its facet type.
   const chips = [];
   if (b.author) chips.push({ type: "author", value: b.author });
+  if (b.translator) chips.push({ type: "translator", value: b.translator });
   if (b.category) chips.push({ type: "category", value: b.category });
   (b.tags || []).forEach((t) => chips.push({ type: "tag", value: t }));
   document.getElementById("m-tags").innerHTML = chips

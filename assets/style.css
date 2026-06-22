@@ -310,6 +310,7 @@ body:not(.modal-open) .grid.is-faded .card:not(.is-hover) { opacity: var(--fade)
 .modal__tags .chip:hover { color: var(--fg); border-color: var(--muted); }
 /* Three distinct facet kinds, so the systems read as separate, not mixed: */
 .modal__tags .chip--author { color: var(--fg); background: var(--bg-2); border-color: var(--bg-2); } /* نویسنده — filled */
+.modal__tags .chip--translator { color: var(--fg); background: var(--bg-2); border-color: var(--bg-2); } /* مترجم — filled */
 .modal__tags .chip--category { color: var(--fg); }                                                   /* نوع — solid outline */
 .modal__tags .chip--tag { color: var(--muted); border-style: dashed; }                               /* موضوع — dashed outline */
 

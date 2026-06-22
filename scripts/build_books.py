@@ -79,6 +79,7 @@ def build_book(slug, dirpath):
         "slug": slug,
         "title": title,
         "author": info.get("author", ""),
+        "translator": info.get("translator", ""),  # optional; "" for authored books
         "year": as_number(info.get("year", "")),
         "language": info.get("language", "").strip() or "فارسی",
         "category": info.get("category", ""),

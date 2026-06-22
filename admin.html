@@ -81,6 +81,9 @@
         </div>
       </div>
 
+      <label>مترجم <span class="hint">— فقط برای کتاب‌های ترجمه‌شده؛ برای تألیفی خالی بگذارید</span></label>
+      <input name="translator" placeholder="لیلی گلستان" />
+
       <div class="row">
         <div>
           <label>دسته‌بندی</label>
@@ -143,6 +146,7 @@
         slug: (d.slug || "").trim(),
         title: (d.title || "").trim(),
         author: (d.author || "").trim(),
+        translator: (d.translator || "").trim(),
         year: (d.year || "").trim(),
         language: (d.language || "").trim(),
         category: (d.category || "").trim(),
