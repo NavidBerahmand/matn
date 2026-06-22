@@ -177,8 +177,9 @@ a { color: inherit; text-decoration: none; }
 
 /* card */
 .card { cursor: pointer; transition: opacity 0.35s ease; }
-/* hover fade: dim siblings, keep hovered one bright */
-.grid:hover .card { opacity: var(--fade); }
+/* hover fade: dim siblings only while an actual card is hovered — not when the
+   cursor is merely over the empty space between cards. */
+.grid:has(.card:hover) .card { opacity: var(--fade); }
 .grid .card:hover { opacity: 1; }
 
 .card__cover {
