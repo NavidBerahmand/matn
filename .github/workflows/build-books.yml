@@ -1,0 +1,49 @@
+name: Build books.json
+
+on:
+  push:
+    branches: [main]
+    # Loop guard #1 (trigger level): only run when something inside books/
+    # changes. books.json lives at the repo ROOT (not under books/), so the
+    # workflow's own commit — which only touches books.json — never matches
+    # this filter and cannot re-trigger the workflow. The explicit negative
+    # pattern below documents that books.json must never be a trigger (the
+    # in-`paths` equivalent of paths-ignore, since GitHub forbids using both
+    # `paths` and `paths-ignore` for the same event).
+    paths:
+      - 'books/**'
+      - '!books.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-books
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate books.json from books/ folders
+        run: python3 scripts/build_books.py
+
+      - name: Commit & push only if books.json actually changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add books.json
+          # Loop guard #2 (script level): if books.json did not actually change,
+          # do not commit or push anything at all.
+          if git diff --staged --quiet; then
+            echo "books.json unchanged — nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore: regenerate books.json from books/ [skip ci]"
+          git push

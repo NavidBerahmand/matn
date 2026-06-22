@@ -30,6 +30,50 @@ books/<slug>/       فایل‌های هر کتاب (PDF روشن، PDF تاری
 
 ۴. commit و push کن. GitHub Pages به‌صورت خودکار به‌روزرسانی می‌شود.
 
+## ساخت خودکار `books.json` (GitHub Action)
+
+به‌جای ویرایش دستیِ `books.json`، می‌توانی فقط پوشهٔ کتاب را با یک `info.txt`
+بسازی؛ یک GitHub Action خودش `books.json` را تولید می‌کند.
+
+**ساختار هر پوشه** (`books/<slug>/`):
+
+```
+books/boofkoor/
+  boofkoor-Light.pdf
+  boofkoor-Dark.pdf
+  boofkoor-Cover.jpg      (یا .png/.webp/...)
+  info.txt
+```
+
+**فرمت `info.txt`** (هر خط یک «کلید: مقدار»):
+
+```
+title: بوف کور
+author: صادق هدایت
+year: 1315
+category: داستان بلند
+tags: ادبیات معاصر، رمان، کلاسیک
+pages: 120
+description: متن توضیح...
+```
+
+- `slug` = نام پوشه. `language` اگر نباشد پیش‌فرض «فارسی».
+- `tags` با «،» یا «,» جدا می‌شود؛ فاصله trim و تگ خالی حذف می‌شود.
+- `file_light`/`file_dark`/`cover` از روی نام فایل‌ها (`-Light.pdf`، `-Dark.pdf`،
+  `-Cover.<img>`) پیدا می‌شوند؛ اگر نبود، خالی می‌ماند.
+- `year` و `pages` اگر عددی باشند عدد می‌شوند (ارقام فارسی هم)، وگرنه رشته می‌مانند.
+- پوشهٔ ناقص (بدون `info.txt` یا بدون `title`) رد می‌شود و بقیه ساخته می‌شوند.
+
+**نکتهٔ مهم:** با فعال‌شدن این Action، **پوشه‌ها منبعِ یگانهٔ حقیقت‌اند**؛
+یعنی هر بار که داخل `books/` چیزی تغییر کند، `books.json` کامل از نوِ روی پوشه‌ها
+بازنویسی می‌شود. پس اگر کتابی در `books.json` هست ولی پوشه‌اش نیست، حذف خواهد شد.
+
+محلی هم می‌توانی همین را اجرا کنی: `python3 scripts/build_books.py`
+
+> Action فقط روی push به `main` و فقط وقتی `books/**` تغییر کند اجرا می‌شود،
+> و خودِ کامیتِ `books.json` دوباره آن را trigger نمی‌کند (جزئیات در
+> `.github/workflows/build-books.yml`).
+
 ### فیلدهای هر کتاب در `books.json`
 
 | فیلد | توضیح |
