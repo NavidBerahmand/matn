@@ -74,6 +74,11 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Same horizontal box as .grid (max-width + padding + centered) so the brand
+     lines up with the right edge of book 1 and the search button with the left
+     edge of book 5. */
+  max-width: 1400px;
+  margin: 0 auto;
   padding: 22px 40px;
   font-size: 12px;
   border-bottom: 1px solid transparent;
@@ -126,7 +131,7 @@ a { color: inherit; text-decoration: none; }
 .search-input::placeholder { color: var(--muted); }
 .search-input:focus { border-bottom-color: var(--muted); }
 .search-meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
-@media (max-width: 700px) { .search-panel { padding-left: 24px; padding-right: 24px; } }
+@media (max-width: 540px) { .search-panel { padding-left: 24px; padding-right: 24px; } }
 
 /* ===== Active filter bar (tag filter — independent from search) ===== */
 .filter-bar {
@@ -156,7 +161,7 @@ a { color: inherit; text-decoration: none; }
 .filter-chip:hover { opacity: 0.8; }
 .filter-chip__type { color: var(--muted); font-size: 11px; }
 .filter-chip__x { color: var(--muted); font-size: 11px; }
-@media (max-width: 700px) { .filter-bar { padding-left: 24px; padding-right: 24px; } }
+@media (max-width: 540px) { .filter-bar { padding-left: 24px; padding-right: 24px; } }
 
 /* ===== Grid ===== */
 .grid {
@@ -164,12 +169,16 @@ a { color: inherit; text-decoration: none; }
   margin: 0 auto;
   padding: 60px 40px 100px;
   display: grid;
+  /* Always exactly 5 spaced columns on desktop. The outer columns have no gap
+     beyond them, so book 1's right edge and book 5's left edge land exactly on
+     the container's padding edges — i.e. aligned with the nav above. */
   grid-template-columns: repeat(5, 1fr);
-  gap: 46px 34px;
+  gap: 46px 40px;
 }
-@media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 700px)  { .grid { grid-template-columns: repeat(2, 1fr); gap: 32px 22px; padding: 40px 24px 80px; } }
-@media (max-width: 700px)  { .nav { padding-left: 24px; padding-right: 24px; } }
+/* Only step down on tablet / phone widths — desktop stays at 5. */
+@media (max-width: 820px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 540px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 32px 22px; padding: 40px 24px 80px; } }
+@media (max-width: 540px) { .nav { padding-left: 24px; padding-right: 24px; } }
 
 /* card */
 .card { cursor: pointer; transition: opacity 0.35s ease; }
