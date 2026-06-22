@@ -72,5 +72,24 @@
     "file_light": "jennameh-Light.pdf",
     "file_dark": "jennameh-Dark.pdf",
     "cover": "jennameh-Cover.jpg"
+  },
+  {
+    "slug": "shazdeh-koochooloo",
+    "title": "شازده کوچولو",
+    "author": "آنتوان دو سنت‌اگزوپری",
+    "translator": "احمد شاملو",
+    "year": 1943,
+    "language": "فارسی",
+    "category": "داستان بلند",
+    "tags": [
+      "ادبیات جهان",
+      "کودک و نوجوان",
+      "کلاسیک"
+    ],
+    "pages": 96,
+    "description": "قصه‌ای شاعرانه دربارهٔ خلبانی که در صحرا با شازده‌ای کوچک از سیاره‌ای دیگر آشنا می‌شود؛ روایتی لطیف دربارهٔ دوستی، عشق و نگاهِ کودکانه به جهان.",
+    "file_light": "shazdeh-koochooloo-Light.pdf",
+    "file_dark": "shazdeh-koochooloo-Dark.pdf",
+    "cover": "shazdeh-koochooloo-Cover.jpg"
   }
 ]

@@ -308,6 +308,13 @@ function openModal(i) {
   const dark = bookFile(b, b.file_dark);
 
   document.getElementById("m-title").textContent = b.title || "";
+
+  // Byline under the title: author, then a translator line for translated books.
+  let byline = "";
+  if (b.author) byline += `<span>${escapeHtml(b.author)}</span>`;
+  if (b.translator) byline += `<span class="tr">ترجمهٔ ${escapeHtml(b.translator)}</span>`;
+  document.getElementById("m-byline").innerHTML = byline;
+
   document.getElementById("m-desc").textContent = b.description || "";
 
   // Plain info rows (year/language/pages). Author and category live in the
