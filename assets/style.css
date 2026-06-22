@@ -307,8 +307,8 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--btn-bg);
   transition: opacity 0.2s, background 0.2s, color 0.2s;
 }
-.dl .light { background: var(--btn-bg); color: var(--btn-fg); }
-.dl .dark { background: transparent; color: var(--fg); border-color: var(--line); }
+.dl .light { background: transparent; color: var(--fg); border-color: var(--line); }
+.dl .dark { background: var(--btn-bg); color: var(--btn-fg); }
 .dl button:hover { opacity: 0.82; }
 .dl button:disabled { opacity: 0.4; cursor: progress; }
 
