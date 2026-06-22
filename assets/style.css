@@ -195,8 +195,9 @@ a { color: inherit; text-decoration: none; }
 /* card */
 .card { cursor: pointer; transition: opacity 0.35s ease; }
 /* hover fade: while a card is hovered, dim only the OTHER cards (the hovered
-   one keeps full opacity). Scoped to a real card hover, not the gaps. */
-.grid:has(.card:hover) .card:not(:hover) { opacity: var(--fade); }
+   one keeps full opacity). Disabled while a modal is open so the cards behind
+   it don't flicker as the cursor moves over the dialog. */
+body:not(.modal-open) .grid:has(.card:hover) .card:not(:hover) { opacity: var(--fade); }
 
 .card__cover {
   position: relative;

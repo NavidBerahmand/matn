@@ -330,6 +330,7 @@ function openModal(i) {
 
   const backdrop = document.getElementById("modal-backdrop");
   backdrop.classList.add("open");
+  document.body.classList.add("modal-open");
   document.body.style.overflow = "hidden";
   // Always show the modal from its top, regardless of the previous scroll.
   backdrop.scrollTop = 0;
@@ -351,6 +352,7 @@ function setupDlButton(id, url, name) {
 
 function closeModal() {
   document.getElementById("modal-backdrop").classList.remove("open");
+  document.body.classList.remove("modal-open");
   document.body.style.overflow = "";
 }
 
